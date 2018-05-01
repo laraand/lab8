@@ -1,17 +1,24 @@
 <?php
 
-    include '../../dbConnection.php';
+
+include '../../dbConnection.php';
+$conn = connectToDB("lab8");
+
     
-    $conn = getDatabaseConnection("Lab8");
+$username = $_GET['username'];
+
+//next query allows SQL Injection!
+$sql = "SELECT * FROM lab8_user WHERE username = :username ";
+
     
-    $username = $_GET['username'];
-    $sql = "SELECT * FROM lab8_user WHERE username =: $username ";
+$stmt = $conn->prepare($sql);
+$stmt->execute( array(":username"=> $username ));
+$record = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    $stmt = $conn->prepare(@sql);
-    $stmt->execute();
-    $record = $stmt->fetch(PDO::FETCH_ASSOC);
+// print_r($record);
     
-    print_r($record);
+echo json_encode($record);
+
 
 
 ?>

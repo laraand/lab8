@@ -19,7 +19,25 @@
             $(document).ready( function(){
                 
                 $("#username").change(function() {
-                    alert("Enter name please");
+                    //alert("Enter name please");
+                    $.ajax({
+                        type: "GET",
+                        url: "checkUsername.php",
+                        dataType: "json",
+                        data: { "username": $("#username").val() },
+                        success: function(data,status) {
+                            //alert(data.password);
+                            if(!data){
+                                alert("Username is AVAILABLE!");
+                            }else{
+                                alert("Username ALREADY TAKEN!");
+                            }
+                        },
+                        complete: function(data,status) { //optional, used for debugging purposes
+                        //alert(status);
+                        }
+                        
+                    });//ajax
                 });
                 
                 $("#state").change(function() {
@@ -57,10 +75,10 @@
                         dataType: "json",
                         data: { "zip": $("#zipcode").val() },
                         success: function(data,status) {
-                        //alert(data);
-                        $("#city").html(data.city);
                         
-                            
+                            $("#city").html(data.city);
+                            $("#latitude").html(data.latitude);
+                            $("#longitude").html(data.longitude);
                         },
                         complete: function(data,status) { //optional, used for debugging purposes
                         //alert(status);
@@ -89,9 +107,9 @@
                 Zip Code:    <input type="text" id="zipcode"><br>
                 City: <span id="city"></span>
                 <br>
-                Latitude: <span>id ="latitude"</span>
+                Latitude: <span id ="latitude"></span>
                 <br>
-                Longitude:<span>id="longitude"</span>
+                Longitude:<span id="longitude"></span>
                 <br><br>
                 State: 
                 <select id="state">
