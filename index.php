@@ -18,6 +18,35 @@
         <script>
             $(document).ready( function(){
                 
+                $("#subBtn").click(function(){
+                    if($("#zipError").html() == "Zipcode not valid.") {
+                        alert("Zipcode not valid.");
+                    } else if($("#pswrd1").val() != $("#pswrd2").val()){
+                        alert("Passwords do not match.");
+                    } else if($("#error").html() == "Username is taken.") {
+                        alert("Username is not valid.");
+                    } else {
+                        alert("Requirements are met!");
+                        location.reload();
+                    }
+                });
+                
+                $("#pswrd1").change( function() {
+                    if($("#pswrd1").val() != $("#pswrd2").val()){
+                        $("#passwordCheck").html("Passwords do not match.");
+                    } else {
+                        $("#passwordCheck").html("");
+                    }
+                });
+                
+                $("#pswrd2").change( function() {
+                    if($("#pswrd1").val() != $("#pswrd2").val()){
+                        $("#passwordCheck").html("Passwords do not match.");
+                    } else {
+                        $("#passwordCheck").html("");
+                    }
+                });
+                
                 $("#username").change(function() {
                     //alert("Enter name please");
                     $.ajax({
@@ -28,9 +57,13 @@
                         success: function(data,status) {
                             //alert(data.password);
                             if(!data){
-                                alert("Username is AVAILABLE!");
+                                // alert("Username is AVAILABLE!");
+                                $("#error").html("Username is AVAILABLE");
+                                $("#error").css("color","green");
                             }else{
-                                alert("Username ALREADY TAKEN!");
+                                // alert("Username ALREADY TAKEN!");
+                                $("#error").html("Username is TAKEN.");
+                                $("#error").css("color","red");
                             }
                         },
                         complete: function(data,status) { //optional, used for debugging purposes
@@ -75,10 +108,14 @@
                         dataType: "json",
                         data: { "zip": $("#zipcode").val() },
                         success: function(data,status) {
-                        
-                            $("#city").html(data.city);
-                            $("#latitude").html(data.latitude);
-                            $("#longitude").html(data.longitude);
+                            if(!data){
+                                $("#zipError").html("Zipcode not valid.");
+                            }else{
+                                $("#zipError").html("");
+                                $("#city").html(data.city);
+                                $("#latitude").html(data.latitude);
+                                $("#longitude").html(data.longitude);
+                            }
                         },
                         complete: function(data,status) { //optional, used for debugging purposes
                         //alert(status);
@@ -104,7 +141,7 @@
                 Last Name:   <input type="text"><br> 
                 Email:       <input type="text"><br> 
                 Phone Number:<input type="text"><br><br>
-                Zip Code:    <input type="text" id="zipcode"><br>
+                Zip Code:    <input type="text" id="zipcode"><span id="zipError"></span><br>
                 City: <span id="city"></span>
                 <br>
                 Latitude: <span id ="latitude"></span>
@@ -122,13 +159,17 @@
                 
                 Select a County: <select id="county"></select><br>
                 
-                Desired Username: <input type="text" id="username"><br>
+                Desired Username: <input type="text" id="username"><span id="error">*Must be unique</span><br>
                 
-                Password: <input type="password"><br>
+                Password: <input type="password" id= "pswrd1"><br>
                 
-                Type Password Again: <input type="password"><br>
+                Type Password Again: <input type="password" id="pswrd2"><br>
                 
-                <input type="submit" value="Sign up!">
+                <div id="passwordCheck"></div>
+                
+                <input type="submit" id="subBtn" value="Sign up!">
+                
+                <div id="recordAdded"></div>
             </fieldset>
         </form>
     
